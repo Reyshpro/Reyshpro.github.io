@@ -96,32 +96,57 @@ document.querySelectorAll('.star-field').forEach(field => {
 });
 
 // ---------- Constellation flip cards ----------
+const isTouchDevice = matchMedia('(hover: none)').matches;
+
 const flipTitles = {
   frontend: 'Frontend',
   backend: 'Backend & Full Stack',
   tools: 'Tools & Workflow'
 };
 
-document.querySelectorAll('.flip-back').forEach(back => {
-  const group = back.dataset.group;
-  const title = document.createElement('div');
-  title.className = 'flip-back-title';
-  title.textContent = flipTitles[group];
-  back.appendChild(title);
+if (isTouchDevice) {
+  // On mobile: replace star fields with a plain skill list on the front
+  document.querySelectorAll('.constellation-flip').forEach(card => {
+    const front = card.querySelector('.flip-front');
+    const group = card.querySelector('.star-field').dataset.group;
 
-  skillData[group].forEach(name => {
-    const item = document.createElement('div');
-    item.className = 'flip-skill';
-    item.textContent = name;
-    back.appendChild(item);
+    front.querySelector('.star-field').remove();
+
+    const list = document.createElement('div');
+    list.className = 'mobile-skill-list';
+    skillData[group].forEach(name => {
+      const item = document.createElement('div');
+      item.className = 'flip-skill';
+      item.textContent = name;
+      list.appendChild(item);
+    });
+    front.appendChild(list);
+
+    card.style.cursor = 'default';
+  });
+} else {
+  // On desktop: populate back faces and enable flip on click
+  document.querySelectorAll('.flip-back').forEach(back => {
+    const group = back.dataset.group;
+    const title = document.createElement('div');
+    title.className = 'flip-back-title';
+    title.textContent = flipTitles[group];
+    back.appendChild(title);
+
+    skillData[group].forEach(name => {
+      const item = document.createElement('div');
+      item.className = 'flip-skill';
+      item.textContent = name;
+      back.appendChild(item);
+    });
+
+    const hint = document.createElement('div');
+    hint.className = 'flip-hint';
+    hint.textContent = 'click to flip back';
+    back.appendChild(hint);
   });
 
-  const hint = document.createElement('div');
-  hint.className = 'flip-hint';
-  hint.textContent = 'click to flip back';
-  back.appendChild(hint);
-});
-
-document.querySelectorAll('.constellation-flip').forEach(card => {
-  card.addEventListener('click', () => card.classList.toggle('flipped'));
-});
+  document.querySelectorAll('.constellation-flip').forEach(card => {
+    card.addEventListener('click', () => card.classList.toggle('flipped'));
+  });
+}
