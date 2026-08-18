@@ -370,6 +370,13 @@ section{
   letter-spacing:0.1em;
 }
 
+.mobile-skill-list{
+  display:flex;
+  flex-direction:column;
+  gap:0;
+  margin-top:0.5rem;
+}
+
 .constellation{
   position:relative;
   background:radial-gradient(ellipse at 50% 0%, rgba(59,110,165,0.18), transparent 70%);
